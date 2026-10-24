@@ -10,3 +10,6 @@ __pycache__/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local ESP32 Wi-Fi credentials
+stage2/arduino/tinyfl_node/secrets.h
