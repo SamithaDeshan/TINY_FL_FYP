@@ -23,6 +23,9 @@
 #define PIR_PIN 4
 #define DHT_PIN 5
 #define DHT_TYPE DHT11
+#define LED_PWM_PIN 6
+#define LED_PWM_FREQ 5000
+#define LED_PWM_RES 8
 #define OLED_SDA 8
 #define OLED_SCL 9
 #define OLED_ADDR 0x3C
@@ -30,6 +33,9 @@
 #define OLED_HEIGHT 64
 #define OLED_RESET -1
 #define SAMPLE_PERIOD_MS 2000
+#define ECO_SAMPLE_PERIOD_MS 5000
+#define CRITICAL_SAMPLE_PERIOD_MS 15000
+#define BATTERY_SIM_STEP_MS 3000
 #define MQTT_TOPIC "tinyfl/node/result"
 #define TENSOR_ARENA_BYTES 8192
 #define INPUT_SCALE 0.018108580261468887f
@@ -61,6 +67,46 @@ float lastHumidity = NAN;
 float lastProbability = 0.0f;
 int lastPir = 0;
 int lastAnomaly = 0;
+uint8_t simulatedBatteryPct = 100;
+uint8_t indicatorPwm = 0;
+bool batterySimulationEnabled = false;
+uint32_t lastBatteryStep = 0;
+
+static const char* energyMode() {
+  if (simulatedBatteryPct <= 20) return "CRITICAL";
+  if (simulatedBatteryPct <= 60) return "ECO";
+  return "NORMAL";
+}
+
+static uint32_t samplePeriodForEnergyMode() {
+  if (simulatedBatteryPct <= 20) return CRITICAL_SAMPLE_PERIOD_MS;
+  if (simulatedBatteryPct <= 60) return ECO_SAMPLE_PERIOD_MS;
+  return SAMPLE_PERIOD_MS;
+}
+
+static uint8_t maxIndicatorPwmForEnergyMode() {
+  if (simulatedBatteryPct <= 20) return 0;
+  if (simulatedBatteryPct <= 60) return 128;
+  return 255;
+}
+
+static void pwmInit() {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcAttach(LED_PWM_PIN, LED_PWM_FREQ, LED_PWM_RES);
+#else
+  ledcSetup(0, LED_PWM_FREQ, LED_PWM_RES);
+  ledcAttachPin(LED_PWM_PIN, 0);
+#endif
+}
+
+static void pwmWriteIndicator(uint8_t duty) {
+  indicatorPwm = duty;
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  ledcWrite(LED_PWM_PIN, duty);
+#else
+  ledcWrite(0, duty);
+#endif
+}
 
 static void drawStatus(const char* state) {
   if (!oledOk) return;
@@ -76,10 +122,49 @@ static void drawStatus(const char* state) {
   if (isnan(lastTemperature)) display.printf("T:-- H:-- PIR:%d", lastPir);
   else display.printf("T:%.0f H:%.0f PIR:%d", lastTemperature, lastHumidity, lastPir);
   display.setCursor(0, 36);
-  display.printf("Anom:%d P:%.2f", lastAnomaly, lastProbability);
+  display.printf("A:%d P:%.2f PWM:%u", lastAnomaly, lastProbability, indicatorPwm);
   display.setCursor(0, 48);
+  display.printf("BAT:%u%% %s", simulatedBatteryPct, energyMode());
+  display.setCursor(0, 56);
   display.printf("%s #%lu", state, (unsigned long)sampleNumber);
   display.display();
+}
+
+static void handleSerialCommands() {
+  while (Serial.available()) {
+    char command = (char)Serial.read();
+    if (command == 'B' || command == 'b') {
+      simulatedBatteryPct = 100;
+      batterySimulationEnabled = true;
+      lastBatteryStep = millis();
+      Serial.println("# battery_sim_started percent=100 source=simulated");
+      drawStatus("battery_sim");
+    } else if (command == 'R' || command == 'r') {
+      batterySimulationEnabled = false;
+      simulatedBatteryPct = 100;
+      pwmWriteIndicator(0);
+      Serial.println("# battery_sim_reset percent=100 source=simulated");
+      drawStatus("battery_reset");
+    }
+  }
+}
+
+static void updateBatterySimulation() {
+  if (!batterySimulationEnabled || millis() - lastBatteryStep < BATTERY_SIM_STEP_MS) return;
+  lastBatteryStep = millis();
+  const char* previousMode = energyMode();
+  int drop = random(1, 6);
+  simulatedBatteryPct = drop >= simulatedBatteryPct ? 0 : simulatedBatteryPct - drop;
+  const char* currentMode = energyMode();
+  Serial.printf("# battery_sim percent=%u drop=%d mode=%s\n", simulatedBatteryPct, drop, currentMode);
+  if (strcmp(previousMode, currentMode) != 0) {
+    Serial.printf("# energy_mode_changed mode=%s sample_period_ms=%lu\n",
+                  currentMode, (unsigned long)samplePeriodForEnergyMode());
+  }
+  if (simulatedBatteryPct == 0) {
+    batterySimulationEnabled = false;
+    Serial.println("# battery_sim_empty source=simulated");
+  }
 }
 
 static void connectWifi() {
@@ -160,6 +245,8 @@ static void publishSample() {
   float probability = (output->data.int8[0] - OUTPUT_ZERO_POINT) * OUTPUT_SCALE;
   probability = constrain(probability, 0.0f, 1.0f);
   int anomaly = probability >= 0.5f;
+  uint8_t requestedPwm = (uint8_t)constrain((int)lroundf(probability * 255.0f), 0, 255);
+  pwmWriteIndicator(min(requestedPwm, maxIndicatorPwmForEnergyMode()));
   lastTemperature = temperature;
   lastHumidity = humidity;
   lastProbability = probability;
@@ -171,7 +258,12 @@ static void publishSample() {
                    ",\"temperature\":" + String(temperature, 1) +
                    ",\"humidity\":" + String(humidity, 1) +
                    ",\"pir\":" + String(pir) +
-                   ",\"inference_us\":" + String(inferenceUs);
+                   ",\"inference_us\":" + String(inferenceUs) +
+                   ",\"battery_pct\":" + String(simulatedBatteryPct) +
+                   ",\"battery_source\":\"simulated\"" +
+                   ",\"energy_mode\":\"" + String(energyMode()) + "\"" +
+                   ",\"indicator_pwm\":" + String(indicatorPwm) +
+                   ",\"sample_period_ms\":" + String(samplePeriodForEnergyMode());
   uint32_t publishUs = 0;
   if (mqtt.connected()) {
     uint32_t publishStart = micros();
@@ -188,6 +280,8 @@ void setup() {
   delay(1000);
   pinMode(PIR_PIN, INPUT);
   dht.begin();
+  pwmInit();
+  pwmWriteIndicator(0);
   Wire.begin(OLED_SDA, OLED_SCL);
   oledOk = display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDR);
   if (oledOk) {
@@ -201,16 +295,19 @@ void setup() {
   mqtt.setServer(MQTT_SERVER, MQTT_PORT);
   Serial.printf("# source=hardware stage=stage2 node=%d\n", NODE_ID);
   Serial.printf("# oled=%s\n", oledOk ? "ok" : "NOT_FOUND");
+  Serial.println("# serial_commands B=start random battery demo R=reset demo");
   if (!setupModel()) return;
   connectWifi();
   connectMqtt();
 }
 
 void loop() {
+  handleSerialCommands();
+  updateBatterySimulation();
   connectWifi();
   connectMqtt();
   mqtt.loop();
-  if (millis() - lastSample >= SAMPLE_PERIOD_MS) {
+  if (millis() - lastSample >= samplePeriodForEnergyMode()) {
     lastSample = millis();
     publishSample();
   }
