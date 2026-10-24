@@ -3,7 +3,7 @@
 // Upload the same sketch to both boards, changing NODE_ID to 1 or 2.
 // This development firmware uses the synthetic int8 model; do not cite its outputs.
 #ifndef NODE_ID
-#define NODE_ID 1
+#define NODE_ID 2
 #endif
 
 #include <Arduino.h>
@@ -151,10 +151,12 @@ static void publishSample() {
     (pir - NORMAL_PIR_MEAN) / NORMAL_PIR_STD,
   };
   for (int index = 0; index < 3; index++) input->data.int8[index] = quantizeInput(normalized[index]);
+  uint32_t inferenceStart = micros();
   if (interpreter->Invoke() != kTfLiteOk) {
     Serial.println("# model_invoke_failed");
     return;
   }
+  uint32_t inferenceUs = micros() - inferenceStart;
   float probability = (output->data.int8[0] - OUTPUT_ZERO_POINT) * OUTPUT_SCALE;
   probability = constrain(probability, 0.0f, 1.0f);
   int anomaly = probability >= 0.5f;
@@ -168,8 +170,15 @@ static void publishSample() {
                    ",\"confidence\":" + String(probability, 4) +
                    ",\"temperature\":" + String(temperature, 1) +
                    ",\"humidity\":" + String(humidity, 1) +
-                   ",\"pir\":" + String(pir) + "}";
-  if (mqtt.connected()) mqtt.publish(MQTT_TOPIC, payload.c_str());
+                   ",\"pir\":" + String(pir) +
+                   ",\"inference_us\":" + String(inferenceUs);
+  uint32_t publishUs = 0;
+  if (mqtt.connected()) {
+    uint32_t publishStart = micros();
+    mqtt.publish(MQTT_TOPIC, (payload + "}").c_str());
+    publishUs = micros() - publishStart;
+  }
+  payload += ",\"publish_us\":" + String(publishUs) + "}";
   Serial.println(payload);
   drawStatus("sample");
 }
