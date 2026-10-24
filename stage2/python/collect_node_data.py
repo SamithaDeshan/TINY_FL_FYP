@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[2]
 FIELDS = [
     "received_at_utc", "scenario", "ground_truth_anomaly", "node", "sample",
     "temperature", "humidity", "pir", "anomaly", "confidence", "inference_us",
+    "battery_pct", "battery_source", "energy_mode", "indicator_pwm", "sample_period_ms",
 ]
 
 
