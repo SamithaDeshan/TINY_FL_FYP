@@ -1,0 +1,32 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC MQTT LOG. Not physical-node evidence.",
+  "events": 21,
+  "rounds": 3,
+  "nodes": [
+    1,
+    2
+  ],
+  "message_bytes_mean": 4533.714285714285,
+  "message_bytes_max": 4562,
+  "rounds_detail": [
+    {
+      "round": 1,
+      "node_publishes": 3,
+      "aggregator_updates": 1,
+      "aggregation_latency_ms": 137.64667510986328
+    },
+    {
+      "round": 2,
+      "node_publishes": 3,
+      "aggregator_updates": 1,
+      "aggregation_latency_ms": 3.0045509338378906
+    },
+    {
+      "round": 3,
+      "node_publishes": 3,
+      "aggregator_updates": 1,
+      "aggregation_latency_ms": 3.000497817993164
+    }
+  ],
+  "log": "stage2/data/mqtt_two_node_events_DEV_ONLY.jsonl"
+}
