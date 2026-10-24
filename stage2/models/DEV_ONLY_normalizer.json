@@ -1,0 +1,21 @@
+{
+  "source": "development-only synthetic data; not thesis evidence",
+  "method": "z-score",
+  "ddof": 0,
+  "feature_order": [
+    "temperature",
+    "humidity",
+    "pir"
+  ],
+  "train_rows": 4000,
+  "mean": {
+    "temperature": 27.6385,
+    "humidity": 70.33525,
+    "pir": 0.10025
+  },
+  "std": {
+    "temperature": 2.4765536032963227,
+    "humidity": 6.496757455646625,
+    "pir": 0.30033304430248764
+  }
+}

@@ -1,0 +1,10 @@
+# ready variant=base - send R to run
+# ready variant=base - send R to run
+# source=hardware
+# variant=base run_model=0
+# chip=ESP32-S3 rev=2 cpu_mhz=240 sdk=v5.5.2-729-g87912cd291 arduino_core=3.3.7
+# optimisation=Os
+# sketch_bytes=297472 free_sketch_bytes=1310720 flash_chip_bytes=16777216
+# stack_used_bytes=636 stack_alloc_bytes=4096
+# heap_free_before=361312 heap_free_after=356584 min_heap_free=351348
+# done

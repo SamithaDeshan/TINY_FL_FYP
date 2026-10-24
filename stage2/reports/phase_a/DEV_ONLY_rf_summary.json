@@ -1,0 +1,39 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC DATA. Do not cite in thesis or paper.",
+  "model": "RandomForestClassifier",
+  "n_estimators": 200,
+  "class_weight": "balanced",
+  "random_state": 42,
+  "feature_order": [
+    "temperature",
+    "humidity",
+    "pir"
+  ],
+  "train_rows": 4000,
+  "test_rows": 1000,
+  "metrics": {
+    "accuracy": 0.94,
+    "precision_anomaly": 0.6020408163265306,
+    "recall_anomaly": 0.7375,
+    "f1_anomaly": 0.6629213483146067,
+    "roc_auc": 0.9793546195652174,
+    "threshold": 0.5,
+    "test_rows": 1000,
+    "confusion_matrix_labels_0_1": [
+      [
+        881,
+        39
+      ],
+      [
+        21,
+        59
+      ]
+    ]
+  },
+  "feature_importance": {
+    "temperature": 0.3616612540287151,
+    "humidity": 0.3924921595218246,
+    "pir": 0.24584658644946025
+  },
+  "model_file": "stage2/models/DEV_ONLY_rf_classifier.joblib"
+}

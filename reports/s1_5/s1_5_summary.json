@@ -1,0 +1,177 @@
+{
+  "n_rows": 4372,
+  "duration_s": 437.1,
+  "period_ms_median": 100.0,
+  "period_ms_p99": 100.0,
+  "ldr_by_label": {
+    "none": {
+      "n": 1332,
+      "mean_raw": 2747.0457957957956,
+      "sd_raw": 775.4174824770672,
+      "min_raw": 60,
+      "max_raw": 4095,
+      "mean_10bit": 686.3018018018018
+    },
+    "warmup": {
+      "n": 389,
+      "mean_raw": 3057.362467866324,
+      "sd_raw": 134.15564406737005,
+      "min_raw": 2844,
+      "max_raw": 3404,
+      "mean_10bit": 763.8894601542416
+    },
+    "bright": {
+      "n": 583,
+      "mean_raw": 2978.0857632933103,
+      "sd_raw": 400.3792783289126,
+      "min_raw": 947,
+      "max_raw": 3655,
+      "mean_10bit": 744.0634648370498
+    },
+    "dark": {
+      "n": 335,
+      "mean_raw": 2972.982089552239,
+      "sd_raw": 92.7406061956514,
+      "min_raw": 2885,
+      "max_raw": 3359,
+      "mean_10bit": 742.7970149253731
+    },
+    "ramp": {
+      "n": 331,
+      "mean_raw": 2962.8912386706947,
+      "sd_raw": 36.641758120455826,
+      "min_raw": 2887,
+      "max_raw": 3173,
+      "mean_10bit": 740.2447129909366
+    },
+    "ambient": {
+      "n": 578,
+      "mean_raw": 2952.0190311418687,
+      "sd_raw": 36.45416368079617,
+      "min_raw": 2868,
+      "max_raw": 3351,
+      "mean_10bit": 737.553633217993
+    },
+    "still": {
+      "n": 340,
+      "mean_raw": 2984.95,
+      "sd_raw": 97.9132442130808,
+      "min_raw": 2891,
+      "max_raw": 3635,
+      "mean_10bit": 745.8235294117648
+    },
+    "motion": {
+      "n": 484,
+      "mean_raw": 2923.6962809917354,
+      "sd_raw": 73.14069871204744,
+      "min_raw": 2709,
+      "max_raw": 3325,
+      "mean_10bit": 730.4669421487604
+    }
+  },
+  "ldr_polarity": "not monotonic",
+  "ldr_separation_sd": 0.05235800038869391,
+  "ldr_saturation_pct": 0.0,
+  "pir_by_label": {
+    "none": {
+      "high_pct": 15.39039039039039,
+      "rising_edges": 19
+    },
+    "warmup": {
+      "high_pct": 19.794344473007712,
+      "rising_edges": 6
+    },
+    "bright": {
+      "high_pct": 21.09777015437393,
+      "rising_edges": 11
+    },
+    "dark": {
+      "high_pct": 22.98507462686567,
+      "rising_edges": 7
+    },
+    "ramp": {
+      "high_pct": 17.220543806646525,
+      "rising_edges": 5
+    },
+    "ambient": {
+      "high_pct": 7.7854671280276815,
+      "rising_edges": 4
+    },
+    "still": {
+      "high_pct": 16.176470588235293,
+      "rising_edges": 5
+    },
+    "motion": {
+      "high_pct": 20.867768595041323,
+      "rising_edges": 9
+    }
+  },
+  "pir_first_high_s": 0.9,
+  "dht": {
+    "attempts": 219,
+    "ok": 219,
+    "success_pct": 100.0,
+    "temp_mean": 32.81963470319635,
+    "temp_sd": 0.07914597987019628,
+    "temp_min": 32.8,
+    "temp_max": 33.2,
+    "hum_mean": 42.10958904109589,
+    "hum_sd": 0.4758857652112823,
+    "hum_min": 41.0,
+    "hum_max": 44.0
+  },
+  "ramp_corr_pwm_ldr": NaN,
+  "checks": [
+    {
+      "check": "LDR separates dark / ambient / bright",
+      "pass": false,
+      "evidence": "not monotonic; min step between levels = 0.1 sd"
+    },
+    {
+      "check": "LDR noise within a steady label",
+      "pass": false,
+      "evidence": "worst SD = 9.78% of full scale (limit 2.0%)"
+    },
+    {
+      "check": "LDR not saturated",
+      "pass": true,
+      "evidence": "0.0% of samples at an ADC rail (limit 1.0%)"
+    },
+    {
+      "check": "PIR quiet when still",
+      "pass": false,
+      "evidence": "HIGH 16.2% of time (limit 5.0%)"
+    },
+    {
+      "check": "PIR responds to motion",
+      "pass": true,
+      "evidence": "HIGH 20.9%, 9 rising edge(s)"
+    },
+    {
+      "check": "DHT11 read success",
+      "pass": true,
+      "evidence": "219/219 valid (100.0%; limit 95.0%)"
+    },
+    {
+      "check": "DHT11 values within datasheet range",
+      "pass": true,
+      "evidence": "T 33-33 C, RH 41-44 %"
+    },
+    {
+      "check": "PWM ramp output present",
+      "pass": false,
+      "evidence": "max duty logged = 0; PWM-vs-LDR correlation r = +nan (only meaningful if the LED shines on the LDR)"
+    },
+    {
+      "check": "Logging period 100 ms",
+      "pass": true,
+      "evidence": "median 100 ms, 99th pct 100 ms"
+    },
+    {
+      "check": "OLED detected at 0x3C",
+      "pass": true,
+      "evidence": "firmware reported oled=ok"
+    }
+  ],
+  "source": "hardware"
+}

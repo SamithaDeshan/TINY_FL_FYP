@@ -1,0 +1,45 @@
+{
+  "n": 10000,
+  "sha256_16": "959d43ae16e6579b",
+  "pir_high_pct": 50.12,
+  "pwm_zero_pct": 37.730000000000004,
+  "pwm_full_pct": 7.6899999999999995,
+  "corr_with_target": {
+    "pir": 0.5964498041679982,
+    "ldr": -0.5208905321900209,
+    "temp": -0.005732626913277989,
+    "hum": -0.03248907046722998
+  },
+  "checks": [
+    {
+      "check": "No missing values",
+      "pass": true,
+      "evidence": "0 missing"
+    },
+    {
+      "check": "PIR binary",
+      "pass": true,
+      "evidence": "values 0,1"
+    },
+    {
+      "check": "LDR within 0-1023",
+      "pass": true,
+      "evidence": "0-1023"
+    },
+    {
+      "check": "Temperature within 15-35 C",
+      "pass": true,
+      "evidence": "15-35"
+    },
+    {
+      "check": "Humidity within 30-80 %",
+      "pass": true,
+      "evidence": "30-80"
+    },
+    {
+      "check": "Target within 0-255",
+      "pass": true,
+      "evidence": "0-255"
+    }
+  ]
+}

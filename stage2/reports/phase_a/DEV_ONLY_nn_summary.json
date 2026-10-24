@@ -1,0 +1,43 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC DATA. Do not cite in thesis or paper.",
+  "architecture": [
+    "Dense(16,relu)",
+    "Dense(8,relu)",
+    "Dense(1,sigmoid)"
+  ],
+  "parameters": 209,
+  "feature_order": [
+    "temperature",
+    "humidity",
+    "pir"
+  ],
+  "normalizer_source": "stage2/models/DEV_ONLY_normalizer.json",
+  "train_rows": 3200,
+  "validation_rows": 800,
+  "test_rows": 1000,
+  "epochs_run": 65,
+  "class_weight": {
+    "0": 1.0,
+    "1": 11.5
+  },
+  "metrics": {
+    "accuracy": 0.933,
+    "precision_anomaly": 0.54421768707483,
+    "recall_anomaly": 1.0,
+    "f1_anomaly": 0.7048458149779736,
+    "roc_auc": 0.9793274456521739,
+    "threshold": 0.5,
+    "confusion_matrix_labels_0_1": [
+      [
+        853,
+        67
+      ],
+      [
+        0,
+        80
+      ]
+    ],
+    "test_rows": 1000
+  },
+  "model_file": "stage2/models/DEV_ONLY_nn_float.keras"
+}

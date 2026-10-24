@@ -1,0 +1,55 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC DATA. Do not cite in thesis or paper.",
+  "rows": 5000,
+  "seed": 42,
+  "requested_anomaly_rate": 0.08,
+  "actual_anomaly_rate": 0.08,
+  "type_counts": {
+    "normal": 4600,
+    "temperature_event": 134,
+    "pir_burst": 133,
+    "humidity_event": 133
+  },
+  "train_rows": 4000,
+  "test_rows": 1000,
+  "train_anomaly_rate": 0.08,
+  "test_anomaly_rate": 0.08,
+  "normalizer": {
+    "source": "development-only synthetic data; not thesis evidence",
+    "method": "z-score",
+    "ddof": 0,
+    "feature_order": [
+      "temperature",
+      "humidity",
+      "pir"
+    ],
+    "train_rows": 4000,
+    "mean": {
+      "temperature": 27.6385,
+      "humidity": 70.33525,
+      "pir": 0.10025
+    },
+    "std": {
+      "temperature": 2.4765536032963227,
+      "humidity": 6.496757455646625,
+      "pir": 0.30033304430248764
+    }
+  },
+  "checks": {
+    "row_count": true,
+    "binary_labels": true,
+    "pir_binary": true,
+    "integer_dht_values": true,
+    "temperature_range": true,
+    "humidity_range": true,
+    "disjoint_splits": true,
+    "all_samples_split": true
+  },
+  "files": {
+    "dataset": "stage2\\data\\DEV_ONLY_synthetic_tinyfl_dataset.csv",
+    "train": "stage2\\data\\DEV_ONLY_train.csv",
+    "test": "stage2\\data\\DEV_ONLY_test.csv",
+    "normalizer": "stage2/models/DEV_ONLY_normalizer.json",
+    "report": "stage2/reports/phase_a/S2_PhaseA_Data_Report_DEV_ONLY.docx"
+  }
+}

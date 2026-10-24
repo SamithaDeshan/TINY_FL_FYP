@@ -1,0 +1,31 @@
+{
+  "sessions": 3,
+  "rows": 18003,
+  "model_rule_mae_pwm": 1.3697717047158806,
+  "model_rule_bias_pwm": 1.286674443148364,
+  "model_rule_correlation": 0.996645417267452,
+  "pir_off_pct": 93.30111648058657,
+  "temperature_range_c": [
+    31.0,
+    31.7
+  ],
+  "humidity_range_pct": [
+    64.0,
+    68.0
+  ],
+  "ldr10_range": [
+    0,
+    1023
+  ],
+  "calibration_valid_pct": 100.0,
+  "motion_to_model_change_s": {
+    "count": 111,
+    "median": 0.0,
+    "p95": 0.0
+  },
+  "input_files": [
+    "data\\s1_6_empty.csv",
+    "data\\s1_6_normal.csv",
+    "data\\s1_6_changing.csv"
+  ]
+}
