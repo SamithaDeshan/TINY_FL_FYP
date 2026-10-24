@@ -1,0 +1,39 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC DATA. Do not cite in thesis or paper.",
+  "qat_epochs": 10,
+  "float_metrics": {
+    "accuracy": 0.933,
+    "precision_anomaly": 0.54421768707483,
+    "recall_anomaly": 1.0,
+    "f1_anomaly": 0.7048458149779736,
+    "roc_auc": 0.9793274456521739
+  },
+  "qat_metrics": {
+    "accuracy": 0.933,
+    "precision_anomaly": 0.54421768707483,
+    "recall_anomaly": 1.0,
+    "f1_anomaly": 0.7048458149779736,
+    "roc_auc": 0.9802377717391305
+  },
+  "int8_tflite_metrics": {
+    "accuracy": 0.933,
+    "precision_anomaly": 0.54421768707483,
+    "recall_anomaly": 1.0,
+    "f1_anomaly": 0.7048458149779736,
+    "roc_auc": 0.9802377717391304
+  },
+  "tflite_bytes": 3080,
+  "input_quantization": {
+    "scale": 0.018108580261468887,
+    "zero_point": -40
+  },
+  "output_quantization": {
+    "scale": 0.00390625,
+    "zero_point": -128
+  },
+  "model_files": {
+    "tflite": "stage2/models/DEV_ONLY_model_int8.tflite",
+    "header": "stage2/models/DEV_ONLY_model_data.h",
+    "params": "stage2/models/DEV_ONLY_model_params.json"
+  }
+}
