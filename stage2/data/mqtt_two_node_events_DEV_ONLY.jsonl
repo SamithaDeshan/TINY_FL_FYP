@@ -1,0 +1,21 @@
+{"time": 1792849981.2861865, "event": "node_2_published", "topic": "tinyfl/dev/node/2/weights", "bytes": 4578, "round": 1, "node_id": 2}
+{"time": 1792849981.28919, "event": "aggregator_received", "topic": "tinyfl/dev/node/2/weights", "bytes": 4578, "round": 1, "node_id": 2}
+{"time": 1792849981.320175, "event": "node_1_published", "topic": "tinyfl/dev/node/1/weights", "bytes": 4571, "round": 1, "node_id": 1}
+{"time": 1792849981.3211703, "event": "aggregator_received", "topic": "tinyfl/dev/node/1/weights", "bytes": 4571, "round": 1, "node_id": 1}
+{"time": 1792849981.323179, "event": "aggregator_published", "topic": "tinyfl/dev/global/weights", "bytes": 4546, "round": 1}
+{"time": 1792849981.325174, "event": "node_1_received", "topic": "tinyfl/dev/global/weights", "bytes": 4546, "round": 1}
+{"time": 1792849981.32717, "event": "node_2_received", "topic": "tinyfl/dev/global/weights", "bytes": 4546, "round": 1}
+{"time": 1792849981.6296716, "event": "node_1_published", "topic": "tinyfl/dev/node/1/weights", "bytes": 4541, "round": 2, "node_id": 1}
+{"time": 1792849981.630659, "event": "aggregator_received", "topic": "tinyfl/dev/node/1/weights", "bytes": 4541, "round": 2, "node_id": 1}
+{"time": 1792849981.6326568, "event": "node_2_published", "topic": "tinyfl/dev/node/2/weights", "bytes": 4555, "round": 2, "node_id": 2}
+{"time": 1792849981.6336555, "event": "aggregator_received", "topic": "tinyfl/dev/node/2/weights", "bytes": 4555, "round": 2, "node_id": 2}
+{"time": 1792849981.6346977, "event": "aggregator_published", "topic": "tinyfl/dev/global/weights", "bytes": 4533, "round": 2}
+{"time": 1792849981.6356494, "event": "node_1_received", "topic": "tinyfl/dev/global/weights", "bytes": 4533, "round": 2}
+{"time": 1792849981.6376545, "event": "node_2_received", "topic": "tinyfl/dev/global/weights", "bytes": 4533, "round": 2}
+{"time": 1792849981.9449172, "event": "node_2_published", "topic": "tinyfl/dev/node/2/weights", "bytes": 4540, "round": 3, "node_id": 2}
+{"time": 1792849981.9469137, "event": "aggregator_received", "topic": "tinyfl/dev/node/2/weights", "bytes": 4540, "round": 3, "node_id": 2}
+{"time": 1792849981.9469137, "event": "node_1_published", "topic": "tinyfl/dev/node/1/weights", "bytes": 4546, "round": 3, "node_id": 1}
+{"time": 1792849981.9479291, "event": "aggregator_received", "topic": "tinyfl/dev/node/1/weights", "bytes": 4546, "round": 3, "node_id": 1}
+{"time": 1792849981.9489362, "event": "aggregator_published", "topic": "tinyfl/dev/global/weights", "bytes": 4527, "round": 3}
+{"time": 1792849981.9501154, "event": "node_1_received", "topic": "tinyfl/dev/global/weights", "bytes": 4527, "round": 3}
+{"time": 1792849981.9511557, "event": "node_2_received", "topic": "tinyfl/dev/global/weights", "bytes": 4527, "round": 3}

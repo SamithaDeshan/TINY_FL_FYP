@@ -31,6 +31,24 @@ TOPIC_UP = "tinyfl/dev/node/+/weights"
 TOPIC_GLOBAL = "tinyfl/dev/global/weights"
 
 
+class EventLogger:
+    def __init__(self, path):
+        self.file = open(path, "w", encoding="utf-8")
+        self.lock = threading.Lock()
+
+    def write(self, event, topic, payload):
+        serialized = json.dumps(payload)
+        record = {"time": time.time(), "event": event, "topic": topic,
+                  "bytes": len(serialized.encode("utf-8"))}
+        record.update({key: payload[key] for key in ("round", "node_id") if key in payload})
+        with self.lock:
+            self.file.write(json.dumps(record) + "\n")
+            self.file.flush()
+
+    def close(self):
+        self.file.close()
+
+
 def make_model():
     model = keras.Sequential([
         keras.layers.Input(shape=(3,)),
@@ -51,7 +69,8 @@ def unpack_weights(payload):
 
 
 class Aggregator:
-    def __init__(self):
+    def __init__(self, event_logger):
+        self.event_logger = event_logger
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id="tinyfl-aggregator")
         self.received = {}
         self.lock = threading.Lock()
@@ -67,6 +86,7 @@ class Aggregator:
 
     def on_message(self, client, userdata, message):
         payload = json.loads(message.payload.decode())
+        self.event_logger.write("aggregator_received", message.topic, payload)
         round_number = int(payload["round"])
         node_id = payload["node_id"]
         with self.lock:
@@ -75,10 +95,13 @@ class Aggregator:
                 weights = list(self.received[round_number].values())
                 global_weights = [sum(item[index] for item in weights) / NODE_COUNT
                                   for index in range(len(weights[0]))]
-                self.client.publish(TOPIC_GLOBAL, json.dumps({
+                outgoing = {
                     "round": round_number,
                     "weights": pack_weights(global_weights),
-                }), qos=1)
+                }
+                serialized = json.dumps(outgoing)
+                self.client.publish(TOPIC_GLOBAL, serialized, qos=1)
+                self.event_logger.write("aggregator_published", TOPIC_GLOBAL, outgoing)
                 self.history.append({"round": round_number, "nodes": sorted(self.received[round_number])})
                 self.ready.set()
 
@@ -88,11 +111,12 @@ class Aggregator:
 
 
 class Node(threading.Thread):
-    def __init__(self, node_id, x, y, initial_weights):
+    def __init__(self, node_id, x, y, initial_weights, event_logger):
         super().__init__(daemon=True)
         self.node_id = node_id
         self.x = x
         self.y = y
+        self.event_logger = event_logger
         self.model = make_model()
         self.model.set_weights(initial_weights)
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=f"tinyfl-node-{node_id}")
@@ -108,6 +132,7 @@ class Node(threading.Thread):
 
     def on_message(self, client, userdata, message):
         payload = json.loads(message.payload.decode())
+        self.event_logger.write(f"node_{self.node_id}_received", message.topic, payload)
         round_number = int(payload["round"])
         self.model.set_weights(unpack_weights(payload["weights"]))
         with self.lock:
@@ -124,12 +149,15 @@ class Node(threading.Thread):
             event = threading.Event()
             with self.lock:
                 self.global_events[round_number] = event
-            self.client.publish(f"tinyfl/dev/node/{self.node_id}/weights", json.dumps({
+            outgoing = {
                 "round": round_number,
                 "node_id": self.node_id,
                 "rows": len(self.y),
                 "weights": pack_weights(self.model.get_weights()),
-            }), qos=1)
+            }
+            topic = f"tinyfl/dev/node/{self.node_id}/weights"
+            self.client.publish(topic, json.dumps(outgoing), qos=1)
+            self.event_logger.write(f"node_{self.node_id}_published", topic, outgoing)
             if not event.wait(30):
                 raise RuntimeError(f"Node {self.node_id} timed out waiting for round {round_number}")
 
@@ -156,12 +184,21 @@ def main():
 
     seed_model = make_model()
     initial_weights = seed_model.get_weights()
-    aggregator = Aggregator()
-    nodes = [Node(1, x1, y1, initial_weights), Node(2, x2, y2, initial_weights)]
+    event_path = data_dir / "mqtt_two_node_events_DEV_ONLY.jsonl"
+    event_logger = EventLogger(event_path)
+    aggregator = Aggregator(event_logger)
+    nodes = [Node(1, x1, y1, initial_weights, event_logger),
+             Node(2, x2, y2, initial_weights, event_logger)]
     for node in nodes:
         node.start()
     for node in nodes:
         node.join()
+    if len(aggregator.history) != ROUNDS:
+        aggregator.close()
+        for node in nodes:
+            node.close()
+        event_logger.close()
+        raise RuntimeError(f"MQTT demo incomplete: received rounds {aggregator.history}")
 
     final_model = make_model()
     final_model.set_weights(nodes[0].model.get_weights())
@@ -183,9 +220,11 @@ def main():
     aggregator.close()
     for node in nodes:
         node.close()
+    event_logger.close()
     print("DEVELOPMENT-ONLY MQTT two-node demo: PASS")
     print(f"Rounds received: {aggregator.history}")
     print(f"MQTT messages: {summary['mqtt_messages']}")
+    print(f"Event log: {event_path}")
     print(f"Final global F1: {f1:.4f}")
 
 
