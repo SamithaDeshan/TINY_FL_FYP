@@ -3,7 +3,7 @@
 // Upload the same sketch to both boards, changing NODE_ID to 1 or 2.
 // This development firmware uses the synthetic int8 model; do not cite its outputs.
 #ifndef NODE_ID
-#define NODE_ID 2
+#define NODE_ID 1
 #endif
 
 #include <Arduino.h>
@@ -21,6 +21,7 @@
 #include "secrets.h"
 
 #define PIR_PIN 4
+#define LDR_PIN 1
 #define DHT_PIN 5
 #define DHT_TYPE DHT11
 #define LED_PWM_PIN 6
@@ -66,6 +67,8 @@ float lastTemperature = NAN;
 float lastHumidity = NAN;
 float lastProbability = 0.0f;
 int lastPir = 0;
+int lastLdrRaw = 0;
+int lastLdr10 = 0;
 int lastAnomaly = 0;
 uint8_t simulatedBatteryPct = 100;
 uint8_t indicatorPwm = 0;
@@ -116,17 +119,17 @@ static void drawStatus(const char* state) {
   display.setCursor(0, 0);
   display.printf("TinyFL Node %d", NODE_ID);
   display.setCursor(0, 12);
-  display.printf("WiFi:%s MQTT:%s", WiFi.status() == WL_CONNECTED ? "OK" : "--",
-                mqtt.connected() ? "OK" : "--");
+  if (isnan(lastTemperature)) display.printf("T:-- H:-- LDR:%d", lastLdr10);
+  else display.printf("T:%.0f H:%.0f LDR:%d", lastTemperature, lastHumidity, lastLdr10);
   display.setCursor(0, 24);
-  if (isnan(lastTemperature)) display.printf("T:-- H:-- PIR:%d", lastPir);
-  else display.printf("T:%.0f H:%.0f PIR:%d", lastTemperature, lastHumidity, lastPir);
+  display.printf("PIR:%d Lraw:%d", lastPir, lastLdrRaw);
   display.setCursor(0, 36);
-  display.printf("A:%d P:%.2f PWM:%u", lastAnomaly, lastProbability, indicatorPwm);
+  display.printf("Anom:%d P:%.2f LED:%u", lastAnomaly, lastProbability, indicatorPwm);
   display.setCursor(0, 48);
   display.printf("BAT:%u%% %s", simulatedBatteryPct, energyMode());
   display.setCursor(0, 56);
-  display.printf("%s #%lu", state, (unsigned long)sampleNumber);
+  display.printf("%s %s #%lu", WiFi.status() == WL_CONNECTED ? "W+" : "W-",
+                mqtt.connected() ? state : "M-", (unsigned long)sampleNumber);
   display.display();
 }
 
@@ -229,7 +232,11 @@ static void publishSample() {
     return;
   }
   int pir = digitalRead(PIR_PIN);
+  int ldrRaw = analogRead(LDR_PIN);
+  int ldr10 = ldrRaw >> 2;
   lastPir = pir;
+  lastLdrRaw = ldrRaw;
+  lastLdr10 = ldr10;
   float normalized[3] = {
     (temperature - NORMAL_TEMP_MEAN) / NORMAL_TEMP_STD,
     (humidity - NORMAL_HUM_MEAN) / NORMAL_HUM_STD,
@@ -258,6 +265,8 @@ static void publishSample() {
                    ",\"temperature\":" + String(temperature, 1) +
                    ",\"humidity\":" + String(humidity, 1) +
                    ",\"pir\":" + String(pir) +
+                   ",\"ldr_raw\":" + String(ldrRaw) +
+                   ",\"ldr10\":" + String(ldr10) +
                    ",\"inference_us\":" + String(inferenceUs) +
                    ",\"battery_pct\":" + String(simulatedBatteryPct) +
                    ",\"battery_source\":\"simulated\"" +
@@ -279,6 +288,8 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
   pinMode(PIR_PIN, INPUT);
+  analogReadResolution(12);
+  analogSetPinAttenuation(LDR_PIN, ADC_11db);
   dht.begin();
   pwmInit();
   pwmWriteIndicator(0);
