@@ -14,7 +14,6 @@
 #include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/schema/schema_generated.h"
-#include "tensorflow/lite/version.h"
 #include "../../models/DEV_ONLY_model_data.h"
 #include "secrets.h"
 
@@ -80,10 +79,6 @@ static int8_t quantizeInput(float value) {
 
 static bool setupModel() {
   tflModel = tflite::GetModel(g_model);
-  if (tflModel->version() != TFLITE_SCHEMA_VERSION) {
-    Serial.println("# model_schema_mismatch");
-    return false;
-  }
   static tflite::MicroInterpreter staticInterpreter(tflModel, resolver, tensorArena,
                                                       TENSOR_ARENA_BYTES, nullptr);
   interpreter = &staticInterpreter;
