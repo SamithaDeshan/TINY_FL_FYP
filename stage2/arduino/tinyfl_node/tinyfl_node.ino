@@ -3,7 +3,7 @@
 // Upload the same sketch to both boards, changing NODE_ID to 1 or 2.
 // This development firmware uses the synthetic int8 model; do not cite its outputs.
 #ifndef NODE_ID
-#define NODE_ID 1
+#define NODE_ID 2
 #endif
 
 #include <Arduino.h>
@@ -274,12 +274,21 @@ static void publishSample() {
                    ",\"indicator_pwm\":" + String(indicatorPwm) +
                    ",\"sample_period_ms\":" + String(samplePeriodForEnergyMode());
   uint32_t publishUs = 0;
+  bool publishOk = false;
   if (mqtt.connected()) {
     uint32_t publishStart = micros();
-    mqtt.publish(MQTT_TOPIC, (payload + "}").c_str());
+    String mqttPayload = payload + "}";
+    publishOk = mqtt.publish(MQTT_TOPIC, mqttPayload.c_str());
     publishUs = micros() - publishStart;
+    if (!publishOk) {
+      Serial.printf("# mqtt_publish_failed state=%d payload_bytes=%u\n",
+                    mqtt.state(), (unsigned)mqttPayload.length());
+    }
+  } else {
+    Serial.println("# mqtt_publish_skipped disconnected");
   }
-  payload += ",\"publish_us\":" + String(publishUs) + "}";
+  payload += ",\"publish_us\":" + String(publishUs) +
+             ",\"mqtt_published\":" + String(publishOk ? 1 : 0) + "}";
   Serial.println(payload);
   drawStatus("sample");
 }
@@ -304,6 +313,11 @@ void setup() {
     display.display();
   }
   mqtt.setServer(MQTT_SERVER, MQTT_PORT);
+  if (!mqtt.setBufferSize(512)) {
+    Serial.println("# mqtt_buffer_resize_failed");
+  } else {
+    Serial.println("# mqtt_buffer_bytes=512");
+  }
   Serial.printf("# source=hardware stage=stage2 node=%d\n", NODE_ID);
   Serial.printf("# oled=%s\n", oledOk ? "ok" : "NOT_FOUND");
   Serial.println("# serial_commands B=start random battery demo R=reset demo");
