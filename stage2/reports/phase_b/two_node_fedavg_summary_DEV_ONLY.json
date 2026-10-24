@@ -1,0 +1,155 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC DATA. Do not cite in thesis or paper.",
+  "nodes": 2,
+  "rounds": 5,
+  "local_epochs": 3,
+  "partition": "stratified 50/50 split of the development training set",
+  "node_rows": {
+    "node1": 2000,
+    "node2": 2000
+  },
+  "rounds_detail": [
+    {
+      "round": 1,
+      "global": {
+        "precision_anomaly": 0.22590361445783133,
+        "recall_anomaly": 0.9375,
+        "f1_anomaly": 0.3640776699029126,
+        "roc_auc": 0.9009986413043478
+      },
+      "local": {
+        "node1": {
+          "precision_anomaly": 0.22118380062305296,
+          "recall_anomaly": 0.8875,
+          "f1_anomaly": 0.3541147132169576,
+          "roc_auc": 0.891976902173913
+        },
+        "node2": {
+          "precision_anomaly": 0.20994475138121546,
+          "recall_anomaly": 0.95,
+          "f1_anomaly": 0.3438914027149321,
+          "roc_auc": 0.9093138586956522
+        }
+      },
+      "node_rows": [
+        2000,
+        2000
+      ]
+    },
+    {
+      "round": 2,
+      "global": {
+        "precision_anomaly": 0.31223628691983124,
+        "recall_anomaly": 0.925,
+        "f1_anomaly": 0.4668769716088328,
+        "roc_auc": 0.9228736413043478
+      },
+      "local": {
+        "node1": {
+          "precision_anomaly": 0.3242009132420091,
+          "recall_anomaly": 0.8875,
+          "f1_anomaly": 0.47491638795986624,
+          "roc_auc": 0.919476902173913
+        },
+        "node2": {
+          "precision_anomaly": 0.31512605042016806,
+          "recall_anomaly": 0.9375,
+          "f1_anomaly": 0.4716981132075472,
+          "roc_auc": 0.9265557065217391
+        }
+      },
+      "node_rows": [
+        2000,
+        2000
+      ]
+    },
+    {
+      "round": 3,
+      "global": {
+        "precision_anomaly": 0.3694581280788177,
+        "recall_anomaly": 0.9375,
+        "f1_anomaly": 0.5300353356890459,
+        "roc_auc": 0.9408763586956521
+      },
+      "local": {
+        "node1": {
+          "precision_anomaly": 0.3694581280788177,
+          "recall_anomaly": 0.9375,
+          "f1_anomaly": 0.5300353356890459,
+          "roc_auc": 0.9396127717391304
+        },
+        "node2": {
+          "precision_anomaly": 0.38190954773869346,
+          "recall_anomaly": 0.95,
+          "f1_anomaly": 0.5448028673835126,
+          "roc_auc": 0.9420312499999999
+        }
+      },
+      "node_rows": [
+        2000,
+        2000
+      ]
+    },
+    {
+      "round": 4,
+      "global": {
+        "precision_anomaly": 0.4444444444444444,
+        "recall_anomaly": 0.95,
+        "f1_anomaly": 0.6055776892430279,
+        "roc_auc": 0.9536345108695652
+      },
+      "local": {
+        "node1": {
+          "precision_anomaly": 0.4578313253012048,
+          "recall_anomaly": 0.95,
+          "f1_anomaly": 0.6178861788617886,
+          "roc_auc": 0.951351902173913
+        },
+        "node2": {
+          "precision_anomaly": 0.4293785310734463,
+          "recall_anomaly": 0.95,
+          "f1_anomaly": 0.5914396887159533,
+          "roc_auc": 0.9562567934782609
+        }
+      },
+      "node_rows": [
+        2000,
+        2000
+      ]
+    },
+    {
+      "round": 5,
+      "global": {
+        "precision_anomaly": 0.4720496894409938,
+        "recall_anomaly": 0.95,
+        "f1_anomaly": 0.6307053941908713,
+        "roc_auc": 0.9613654891304348
+      },
+      "local": {
+        "node1": {
+          "precision_anomaly": 0.4779874213836478,
+          "recall_anomaly": 0.95,
+          "f1_anomaly": 0.6359832635983264,
+          "roc_auc": 0.9606725543478261
+        },
+        "node2": {
+          "precision_anomaly": 0.4785276073619632,
+          "recall_anomaly": 0.975,
+          "f1_anomaly": 0.6419753086419753,
+          "roc_auc": 0.9616915760869564
+        }
+      },
+      "node_rows": [
+        2000,
+        2000
+      ]
+    }
+  ],
+  "final_global": {
+    "precision_anomaly": 0.4720496894409938,
+    "recall_anomaly": 0.95,
+    "f1_anomaly": 0.6307053941908713,
+    "roc_auc": 0.9613654891304348
+  },
+  "mqtt": false
+}
