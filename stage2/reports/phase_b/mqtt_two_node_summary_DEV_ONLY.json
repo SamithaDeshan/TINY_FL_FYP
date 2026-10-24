@@ -1,0 +1,33 @@
+{
+  "warning": "DEVELOPMENT-ONLY SYNTHETIC DATA. Do not cite in thesis or paper.",
+  "nodes": 2,
+  "rounds": 3,
+  "broker": "127.0.0.1:1883",
+  "mqtt_rounds_received": [
+    {
+      "round": 1,
+      "nodes": [
+        1,
+        2
+      ]
+    },
+    {
+      "round": 2,
+      "nodes": [
+        1,
+        2
+      ]
+    },
+    {
+      "round": 3,
+      "nodes": [
+        1,
+        2
+      ]
+    }
+  ],
+  "mqtt_messages": 9,
+  "final_global_f1": 0.39900249376558605,
+  "topic_node_weights": "tinyfl/dev/node/<id>/weights",
+  "topic_global_weights": "tinyfl/dev/global/weights"
+}
