@@ -1,0 +1,63 @@
+{
+  "run_id": "ac93e22510e5",
+  "nodes": 2,
+  "rounds_completed": 3,
+  "local_steps_per_node_per_round": 5,
+  "data_mode": "SYNTHETIC",
+  "updates": [
+    {
+      "round": 1,
+      "node_samples": {
+        "1": 5,
+        "2": 5
+      },
+      "global_weights": [
+        0.10197799999999999,
+        0.12034,
+        0.06629499999999999,
+        0.0023564999999999975
+      ],
+      "update_payload_bytes": [
+        62,
+        61
+      ]
+    },
+    {
+      "round": 2,
+      "node_samples": {
+        "1": 5,
+        "2": 5
+      },
+      "global_weights": [
+        0.109065,
+        0.19297499999999998,
+        0.1905175,
+        -0.004359000000000002
+      ],
+      "update_payload_bytes": [
+        62,
+        61
+      ]
+    },
+    {
+      "round": 3,
+      "node_samples": {
+        "1": 5,
+        "2": 5
+      },
+      "global_weights": [
+        0.1714585,
+        0.2330295,
+        0.2939475,
+        -0.015651500000000002
+      ],
+      "update_payload_bytes": [
+        62,
+        61
+      ]
+    }
+  ],
+  "privacy_note": "The updated node firmware keeps sensor readings local. FL MQTT messages carry model updates, global weights, control, and acknowledgements only. MQTT is unencrypted; no differential privacy or secure aggregation is implemented.",
+  "label_note": "Pseudo-label rule: temperature >= 32 C OR humidity >= 81% OR PIR == 1; this is not ground truth.",
+  "completed_at_utc": "2026-10-25T07:45:09.480Z"
+}

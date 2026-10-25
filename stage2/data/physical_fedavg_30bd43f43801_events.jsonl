@@ -1,0 +1,4 @@
+{"time_utc":1792909110.2963312,"run_id":"30bd43f43801","event":"aggregator_ready","rounds":3,"local_steps":5}
+{"time_utc":1792909110.2973323,"run_id":"30bd43f43801","event":"start_command_sent","topic":"tinyfl/fl/control","command_bytes":22}
+{"time_utc":1792909290.3013968,"run_id":"30bd43f43801","event":"round_timeout","round":1,"missing_updates":[1,2],"missing_global_acks":[1,2]}
+{"time_utc":1792909290.3024812,"run_id":"30bd43f43801","event":"stop_command_sent","topic":"tinyfl/fl/control"}

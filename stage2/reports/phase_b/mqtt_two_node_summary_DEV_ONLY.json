@@ -27,7 +27,7 @@
     }
   ],
   "mqtt_messages": 9,
-  "final_global_f1": 0.39900249376558605,
+  "final_global_f1": 0.31130063965884863,
   "topic_node_weights": "tinyfl/dev/node/<id>/weights",
   "topic_global_weights": "tinyfl/dev/global/weights"
 }

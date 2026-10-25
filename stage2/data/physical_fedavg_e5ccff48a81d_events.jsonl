@@ -1,0 +1,3 @@
+{"time_utc":1792908984.1903918,"run_id":"e5ccff48a81d","event":"aggregator_ready","rounds":3,"local_steps":5}
+{"time_utc":1792908984.1953914,"run_id":"e5ccff48a81d","event":"start_command_sent","topic":"tinyfl/fl/control","command_bytes":22}
+{"time_utc":1792909164.2062562,"run_id":"e5ccff48a81d","event":"stop_command_sent","topic":"tinyfl/fl/control"}

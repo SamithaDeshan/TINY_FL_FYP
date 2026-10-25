@@ -13,3 +13,7 @@ Thumbs.db
 
 # Local ESP32 Wi-Fi credentials
 stage2/arduino/tinyfl_node/secrets.h
+
+# Local MQTT TLS private keys/certificates and generated ESP32 trust header
+stage2/mqtt/certs/local/
+stage2/arduino/tinyfl_node/mqtt_ca.h

@@ -1,0 +1,58 @@
+{
+  "run_id": "04bbb7f13378",
+  "nodes": 2,
+  "rounds_completed": 3,
+  "local_steps_per_node_per_round": 5,
+  "updates": [
+    {
+      "round": 1,
+      "node_samples": {
+        "1": 5,
+        "2": 5
+      },
+      "global_weights": [
+        -0.015317999999999988,
+        -0.1910595,
+        0.080222,
+        -0.040899000000000005
+      ],
+      "update_payload_bytes": [
+        62
+      ]
+    },
+    {
+      "round": 2,
+      "node_samples": {
+        "1": 5,
+        "2": 5
+      },
+      "global_weights": [
+        -0.05973800000000003,
+        -0.3198335,
+        0.12271000000000001,
+        -0.09363550000000001
+      ],
+      "update_payload_bytes": [
+        62
+      ]
+    },
+    {
+      "round": 3,
+      "node_samples": {
+        "1": 5,
+        "2": 5
+      },
+      "global_weights": [
+        -0.1074115,
+        -0.42708250000000003,
+        0.14033600000000002,
+        -0.14659550000000002
+      ],
+      "update_payload_bytes": [
+        63
+      ]
+    }
+  ],
+  "privacy_note": "Raw sensor readings were not included in FedAvg MQTT updates. Rule-based pseudo-labels were generated locally. No differential privacy or secure aggregation is implemented.",
+  "label_note": "Pseudo-label rule: temperature >= 32 C OR humidity >= 81% OR PIR == 1; this is not ground truth."
+}

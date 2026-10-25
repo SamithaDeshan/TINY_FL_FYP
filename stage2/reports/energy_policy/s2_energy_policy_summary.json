@@ -1,0 +1,111 @@
+{
+  "warning": "Battery percentage is simulated by firmware; this is not battery voltage or energy measurement.",
+  "input_csv": "C:\\Users\\Sammy's WorkStation\\Desktop\\TINY_FL_FYP\\TinyFL_Hardware\\stage2\\data\\energy_policy_sim.csv",
+  "rows": 101,
+  "nodes": [
+    1,
+    2
+  ],
+  "duration_s": 822.327339,
+  "battery_sources": [
+    "simulated"
+  ],
+  "battery_simulation_confirmed": true,
+  "overall_pwm_cap_pass_pct": 100.0,
+  "node_summaries": [
+    {
+      "node": 1,
+      "rows": 50,
+      "duration_s": 547.993398,
+      "median_interval_ms": 14996.352,
+      "battery_start_pct": 79.0,
+      "battery_end_pct": 0.0,
+      "ldr10_min": 339,
+      "ldr10_max": 726
+    },
+    {
+      "node": 2,
+      "rows": 51,
+      "duration_s": 821.381399,
+      "median_interval_ms": 14998.4185,
+      "battery_start_pct": 79.0,
+      "battery_end_pct": 0.0,
+      "ldr10_min": 301,
+      "ldr10_max": 330
+    }
+  ],
+  "mode_summaries": [
+    {
+      "node": 1,
+      "mode": "NORMAL",
+      "rows": 10,
+      "battery_min_pct": 61.0,
+      "battery_max_pct": 79.0,
+      "pwm_max": 218,
+      "pwm_cap": 255,
+      "pwm_cap_pass_pct": 100.0,
+      "expected_interval_ms": 2000,
+      "observed_interval_median_ms": 2000.257
+    },
+    {
+      "node": 1,
+      "mode": "ECO",
+      "rows": 7,
+      "battery_min_pct": 26.0,
+      "battery_max_pct": 57.0,
+      "pwm_max": 128,
+      "pwm_cap": 128,
+      "pwm_cap_pass_pct": 100.0,
+      "expected_interval_ms": 5000,
+      "observed_interval_median_ms": 5000.841
+    },
+    {
+      "node": 1,
+      "mode": "CRITICAL",
+      "rows": 33,
+      "battery_min_pct": 0.0,
+      "battery_max_pct": 4.0,
+      "pwm_max": 0,
+      "pwm_cap": 0,
+      "pwm_cap_pass_pct": 100.0,
+      "expected_interval_ms": 15000,
+      "observed_interval_median_ms": 15000.032
+    },
+    {
+      "node": 2,
+      "mode": "NORMAL",
+      "rows": 7,
+      "battery_min_pct": 65.0,
+      "battery_max_pct": 79.0,
+      "pwm_max": 222,
+      "pwm_cap": 255,
+      "pwm_cap_pass_pct": 100.0,
+      "expected_interval_ms": 2000,
+      "observed_interval_median_ms": 2000.7939999999999
+    },
+    {
+      "node": 2,
+      "mode": "ECO",
+      "rows": 11,
+      "battery_min_pct": 21.0,
+      "battery_max_pct": 59.0,
+      "pwm_max": 128,
+      "pwm_cap": 128,
+      "pwm_cap_pass_pct": 100.0,
+      "expected_interval_ms": 5000,
+      "observed_interval_median_ms": 5000.138
+    },
+    {
+      "node": 2,
+      "mode": "CRITICAL",
+      "rows": 33,
+      "battery_min_pct": 0.0,
+      "battery_max_pct": 3.0,
+      "pwm_max": 0,
+      "pwm_cap": 0,
+      "pwm_cap_pass_pct": 100.0,
+      "expected_interval_ms": 15000,
+      "observed_interval_median_ms": 14999.91
+    }
+  ]
+}

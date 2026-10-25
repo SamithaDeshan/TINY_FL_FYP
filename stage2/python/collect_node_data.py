@@ -14,12 +14,14 @@ import sys
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
 
 import paho.mqtt.client as mqtt
 
 ROOT = Path(__file__).resolve().parents[2]
+COLLECTION_STATUS_TOPIC = "tinyfl/collection/status"
 FIELDS = [
-    "received_at_utc", "scenario", "ground_truth_anomaly", "node", "sample",
+    "received_at_utc", "collection_id", "scenario", "ground_truth_anomaly", "node", "sample",
     "temperature", "humidity", "pir", "ldr_raw", "ldr10", "anomaly", "confidence", "inference_us",
     "battery_pct", "battery_source", "energy_mode", "indicator_pwm", "sample_period_ms",
 ]
@@ -35,6 +37,7 @@ def main():
     parser.add_argument("--duration", type=int, default=0, help="seconds; 0 collects until Ctrl+C")
     parser.add_argument("--out", default="stage2/data/physical_session.csv")
     args = parser.parse_args()
+    session_id = uuid4().hex[:12]
 
     output_path = Path(args.out)
     if not output_path.is_absolute():
@@ -45,6 +48,7 @@ def main():
     subscribed = threading.Event()
     count_lock = threading.Lock()
     count = 0
+    session_started = False
 
     with open(output_path, "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=FIELDS)
@@ -74,6 +78,7 @@ def main():
                 payload = json.loads(message.payload.decode("utf-8"))
                 row = {key: payload.get(key, "") for key in FIELDS}
                 row["received_at_utc"] = datetime.now(timezone.utc).isoformat()
+                row["collection_id"] = session_id
                 row["scenario"] = args.scenario
                 row["ground_truth_anomaly"] = "" if args.ground_truth == "unknown" else args.ground_truth
                 writer.writerow(row)
@@ -97,6 +102,12 @@ def main():
                 raise RuntimeError(f"Could not connect to MQTT broker {args.host}:{args.port}")
             if not subscribed.wait(15):
                 raise RuntimeError(f"Broker did not acknowledge subscription to {args.topic}")
+            start_event = json.dumps({"state": "start", "session_id": session_id,
+                                      "scenario": args.scenario})
+            start_info = client.publish(COLLECTION_STATUS_TOPIC, start_event, qos=1, retain=True)
+            start_info.wait_for_publish(timeout=5)
+            session_started = True
+            print(f"COLLECTING session={session_id} scenario={args.scenario}")
             if args.duration > 0:
                 stop.wait(args.duration)
             else:
@@ -106,6 +117,11 @@ def main():
         except KeyboardInterrupt:
             print("Stopping collection...")
         finally:
+            if session_started:
+                stop_event = json.dumps({"state": "stop", "session_id": session_id,
+                                         "scenario": args.scenario})
+                stop_info = client.publish(COLLECTION_STATUS_TOPIC, stop_event, qos=1, retain=True)
+                stop_info.wait_for_publish(timeout=5)
             client.loop_stop()
             client.disconnect()
             file.flush()
